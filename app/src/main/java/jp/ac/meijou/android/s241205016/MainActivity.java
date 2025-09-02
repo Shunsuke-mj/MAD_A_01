@@ -30,33 +30,19 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         prefDataStore = PrefDataStore.getInstance(this);
-        
+
         binding.button2.setOnClickListener(view -> {
             var text = binding.editTextText.getText().toString();
             prefDataStore.setString("name", text);
         });
-        binding.text.setText(R.string.name);
         binding.button.setOnClickListener(view -> {
             var text = binding.editTextText2.getText().toString() + binding.editTextText.getText().toString();
             binding.text.setText(text);
         });
-        /**
-        binding.editTextText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                binding.text.setText(s.toString());
-            }
+    }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-        });
-        */
+    protected void onStart(){
+        super.onStart();
+        prefDataStore.getString("name").ifPresent(name -> binding.text.setText(name));
     }
 }
