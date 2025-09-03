@@ -5,18 +5,42 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.net.DatagramPacket;
+import java.util.Optional;
 
 import jp.ac.meijou.android.s241205016.databinding.ActivityMain2Binding;
 
 public class MainActivity2 extends AppCompatActivity {
 
     private ActivityMain2Binding binding;
+
+    private final ActivityResultLauncher<Intent> getActivityResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                switch (result.getResultCode()) {
+                    case RESULT_OK -> {
+                        Optional.ofNullable(result.getData())
+                                .map(data -> data.getStringExtra("ret"))
+                                .map(text -> "Result: " + text)
+                                .ifPresent((text -> binding.textView4.setText(text)));
+                    }
+                    case RESULT_CANCELED -> {
+                        binding.textView4.setText("Result: Canceled");
+                    }
+                    default -> {
+                        binding.textView4.setText("Result: Unknown(" + result.getResultCode() + ")");
+                    }
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +60,14 @@ public class MainActivity2 extends AppCompatActivity {
             startActivity(intent);
         });
         binding.button4.setOnClickListener(view -> {
-            var intent = new Intent(this, MainActivity.class);
+            var intent = new Intent(this, MainActivity3.class);
             startActivity(intent);
+        });
+        binding.button5.setOnClickListener(view -> {
+            var text = binding.editTextText3.getText().toString();
+            var intent = new Intent(this, MainActivity4.class);
+            intent.putExtra("title", text);
+            getActivityResult.launch(intent);
         });
     }
 }
