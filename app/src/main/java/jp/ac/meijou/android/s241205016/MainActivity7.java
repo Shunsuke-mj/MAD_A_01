@@ -45,8 +45,12 @@ public class MainActivity7 extends AppCompatActivity {
 
         var currentNetwork = connectivityManager.getActiveNetwork();
 
-        updateTransport(currentNetwork);
-        updateIpAddress(currentNetwork);
+        sarchNetwork(currentNetwork);
+
+        binding.button10.setOnClickListener(view -> {
+            var network = connectivityManager.getActiveNetwork();
+            sarchNetwork(network);
+        });
     }
 
     private void updateTransport(Network network) {
@@ -76,5 +80,10 @@ public class MainActivity7 extends AppCompatActivity {
 
             binding.textview9.setText(addresses);
         }
+    }
+
+    private void sarchNetwork(Network network) {
+        updateTransport(network);
+        updateIpAddress(network);
     }
 }
